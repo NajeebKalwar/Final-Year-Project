@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import 'package:bidbazar/Views/Login.dart';
-import 'package:bidbazar/main.dart';
-import 'package:bidbazar/routes/app_routesnames.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -23,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.immersive); //hide navigator and topbar
 
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       // dispose();
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
           overlays: SystemUiOverlay.values);

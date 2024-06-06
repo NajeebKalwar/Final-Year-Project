@@ -1,22 +1,22 @@
 // import 'dart:html';
 
-import 'package:bidbazar/Views/Signup.dart';
 import 'package:bidbazar/controllers/auth_controllers.dart';
-import 'package:bidbazar/widgets/buttonController.dart';
-import 'package:bidbazar/widgets/customRadioButton.dart';
 import 'package:bidbazar/widgets/customTextFormField.dart';
 import 'package:bidbazar/widgets/custombtn.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class loginScreen extends StatelessWidget {
   loginScreen({super.key});
   static const String routeName = '/loginScreen';
+  AuthenticateController controller = Get.put(AuthenticateController());
+
 
   @override
   Widget build(BuildContext context) {
-    AuthenticateController controller = Get.put(AuthenticateController());
+// dynamic theme=Theme.of(context);
     // Get.create(() {
     //   controller;
     // }, permanent: true, tag: "auth");
@@ -45,29 +45,30 @@ class loginScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 25.0,
                           fontWeight: FontWeight.w700,
-                          color: Colors.orange[800]),
+                          color: Colors.orange[800]
+                          ),
                     ),
                     const SizedBox(
                       height: 25.0,
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(
+                      child: const Text(
                         'Welcome Back',
                         style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.w800,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(
+                      child: const Text(
                         'Login to your account',
                         style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w500,
-                            color: const Color.fromARGB(255, 0, 0, 0)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                     ),
                     const SizedBox(
@@ -98,7 +99,7 @@ class loginScreen extends StatelessWidget {
                         controller: controller.passwordController,
                         autofocus: false,
                         labelText: 'Password',
-                        hintText: "Ex: Laksh12#",
+                        hintText: "***",
                         obscureText: controller.isObscure
                             .value, //use obs to listen the changes made in isObscure
                         prefixIconData: Icons.vpn_key_rounded,
@@ -119,6 +120,7 @@ class loginScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (!(controller.emailController.text.isEmpty)) {
+                            controller.forgot();
                           // controller.resetPassword(controller.emailController.text);
                         } else {
                           controller.ErrorMessage.value =
@@ -128,7 +130,7 @@ class loginScreen extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         alignment: Alignment.bottomRight,
-                        child: Text(
+                        child: const Text(
                           'Forgot Password?',
                           style: TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.w600),
@@ -150,9 +152,9 @@ class loginScreen extends StatelessWidget {
                     Obx(
                       () => CustomButton(
                           loadingWidget: controller.isLoading.value
-                              ? CircularProgressIndicator(
+                              ? const CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      const Color.fromARGB(255, 255, 255, 255)))
+                                      Color.fromARGB(255, 255, 255, 255)))
                               : null,
                           color: Colors.orange.shade700,
                           textColor: Colors.white,
@@ -173,7 +175,7 @@ class loginScreen extends StatelessWidget {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 15.0),
                         ),
-                        Text(
+                        const Text(
                           "Don't have an account?",
                           style: TextStyle(fontSize: 15.0),
                         ),

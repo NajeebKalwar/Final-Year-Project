@@ -1,4 +1,5 @@
 const cartModel = require("../models/cart_model");
+const productModel = require("../models/product_model");
 
 const cartController={
 
@@ -7,7 +8,9 @@ const cartController={
             const {product,user,quantity}=req.body;
 
             const foundCart = await cartModel.findOne({user:user});
-            
+            console.log("add to cart now");
+            console.log(product.price);
+            // productModel(quantity)
             if(!foundCart){
                 const newCart = new cartModel({user:user});
                 newCart.items.push({product:product,quantity:quantity
@@ -37,7 +40,19 @@ const cartController={
         }
 
     },
-
+    removeAllFromCart:async function(req,res){
+            try{
+                const {user}=req.body;
+                    const deleteCart = await cartModel.deleteOne({
+                        user:user
+                    });
+            return res.json({success:true,message:"Successfully deleted" ,data:deleteCart });
+                    
+            }catch{
+            return res.json({success:false,message:ex });
+                
+            }
+    },
     removeFromCart:async function(req,res){
         try{
             const {user,product}=req.body;

@@ -1,12 +1,13 @@
-import 'package:bidbazar/controllers/auth_controllers.dart';
 import 'package:bidbazar/controllers/category_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class Category extends GetView<categoryController> {
   Category({super.key});
   // AuthenticateController categoryController = Get.put(AuthenticateController());
+  @override
   categoryController controller = Get.put(categoryController());
 
   @override
@@ -28,16 +29,16 @@ class Category extends GetView<categoryController> {
                       onTap: () {
                         controller.fetchCategories();
                       },
-                      leading: Icon(Icons.smartphone_outlined),
+                      leading: const Icon(Icons.smartphone_outlined),
                       title:
                           Text(controller.categoryList[index].title.toString()),
-                      trailing: Icon(Icons.arrow_right),
+                      trailing: const Icon(Icons.arrow_right),
                     );
                   },
                 );
               },
-              onLoading: Center(child: CircularProgressIndicator()),
-              onEmpty: Text("empty"),
+              onLoading: const Center(child: CircularProgressIndicator()),
+              onEmpty: const Text("empty"),
               onError: (error) => Text(
                 error.toString(),
               ),

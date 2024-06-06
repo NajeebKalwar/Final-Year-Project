@@ -1,137 +1,124 @@
+import 'dart:ui';
+
+import 'package:bidbazar/controllers/auth_controllers.dart';
+import 'package:bidbazar/controllers/cart_controller.dart';
 import 'package:bidbazar/controllers/product_controller.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:bidbazar/data/models/product_model.dart';
+import 'package:bidbazar/widgets/gridItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class productView extends GetView<product_controller> {
-  productView({super.key});
+  productView(
+      {super.key, required this.productList, this.cart, this.isProductDelete});
+  // product_controller controller;
+  RxList<productModel> productList = (List<productModel>.of([])).obs;
+  bool? isProductDelete;
+  cartController? cart;
 
-  product_controller controller = Get.put(product_controller());
+  // AuthenticateController user = Get.put(AuthenticateController());
+
+  // String userType =
+  //       user.userdata.first.usertype.toString() == "Buyer" ? "Buyer" : "Seller";
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return controller.obx(
-      (state) => GridView.builder(
-        itemCount: controller.productList.length,
-        // padding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: size.width / size.height / .65,
-          crossAxisCount: 2,
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 30.0,
-        ),
-        itemBuilder: (context, index) {
-          final product = controller.productList[index];
+      (state) => RefreshIndicator(
+        onRefresh: () async {
+          controller.update();
+        },
+        child: GridView.builder(
+          itemCount: productList.length,
+          // padding: EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: size.width / size.height / .61,
+            crossAxisCount: 2,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+          ),
+          itemBuilder: (context, index) {
+            productModel product = productList[index];
 
-          return CupertinoButton(
-            onPressed: () {
-              Get.toNamed(
-                "productDetailScreen",
-                arguments: product,
-              );
-            },
-            child: Container(
-              // width: size.width * .4,
-              // height: 100.0,
-              // color: Colors.amber,
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        // color: Colors.grey[200],
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(10),
-                            bottom: Radius.circular(15)),
-                      ),
-                      child: Hero(
-                        tag: product.sId.toString(),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(10),
-                              bottom: Radius.circular(15)),
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            // width: size.width * .9,
-                            imageUrl: controller.productList[index].images!
-                                .elementAt(0),
+            return CupertinoButton(
+              onPressed: () {
+                // print("working");
+                // print(productList);
+                product.soldqty == product.qty
+                    ? null
+                    : Get.toNamed(
+                        "productDetailScreen",
+                        arguments: [
+                          productList[index],
+                          AuthenticateController.userdata.first.usertype,
+                          // controller,
+                          null,
+                          true,
+                          // index
+                        ],
+                      );
+              },
+              child:
+               
+               product.qty == product.soldqty
+                  ? Stack(
+                      children: [
+                       
+                        CupertinoButton(
+                          onPressed: () {
+                            Get.snackbar("Product", "product is sold");
+                          },
+                          child: gridItem(
+                            cart: cart,
+                            isProductDelete: isProductDelete,
+                            product: product,
+                            index: index,
+                            userType:
+                                AuthenticateController.userdata.first.usertype,
                           ),
-                          // "https://i.postimg.cc/nzdgXrFC/anh-nhat-Pd-ALQmf-Eqv-E-unsplash.jpg"
                         ),
-                      ),
-                      // height: size.height * 1,
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                    thickness: 3,
-                  ),
-                  // ListTile(
-                  //   // leading: ,
-
-                  //   // title: Text("Samung s21 ultra"),
-                  //   trailing: Icon(Icons.shopping_cart),
-                  // ),
-                  // Card(),
-                  // Padding(padding: padding)
-                  Expanded(
-                    child: Container(
-                      width: size.width * 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 6, 0, 5),
-                            child: Text(
-                              maxLines: 1,
-                              controller.productList[index].name.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        ClipRRect(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                            child: const SizedBox(
+                              height: 220,
+                              width: 150,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Expanded(
+                        ),
+                        const Card(
+                            margin: EdgeInsets.all(5),
+                            child: Padding(
+                                padding: EdgeInsets.all(5),
                                 child: Text(
-                                  "Rs " +
-                                      controller.productList[index].price
-                                          .toString(),
-                                  style: const TextStyle(
-                                    letterSpacing: 1,
-                                    color: Colors.black54,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    // color: Colors.orange[900],
-                                  ),
-                                  maxLines: 1,
-                                ),
-                              ),
-                              Icon(
-                                Icons.shopping_cart,
-                                color: Colors.grey[500],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                                  "Sold out",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ))),
+                       
+                      ],
+                    )
+                  : gridItem(
+                      cart: cart,
+                      isProductDelete: isProductDelete,
+                      product: product,
+                      index: index,
+                      userType: AuthenticateController.userdata.first.usertype,
                     ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
       // onLoading: ,
-      onEmpty: Text("There is no product to display"),
-      onError: (error) => Text("${error}"),
+      onEmpty: const Text(
+        "There is no product to display",
+      ),
+      onError: (error) => Center(child: Text("${error}")),
     );
   }
 }
